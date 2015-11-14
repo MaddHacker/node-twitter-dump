@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta charset="UTF-8" />
+<title>Twitter Dump</title>
+<meta name="application-name" content="Twitter Dump" />
+<meta name="author" content="MaddHacker <hacker@maddhacker.com>" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+<style type="text/css">
+.flash {
+  -moz-animation: flash 1s ease-out;
+  -moz-animation-iteration-count: 1;
+
+  -webkit-animation: flash 1s ease-out;
+  -webkit-animation-iteration-count: 1;
+
+  -ms-animation: flash 1s ease-out;
+  -ms-animation-iteration-count: 1;
+}
+
+@-webkit-keyframes flash {
+    0% { background-color: none; }
+    50% { background-color: red; }
+    100% { background-color: none; }
+}
+
+@-moz-keyframes flash {
+    0% { background-color: none; }
+    50% { background-color: red; }
+    100% { background-color: none; }
+}
+
+@-ms-keyframes flash {
+    0% { background-color: none; }
+    50% { background-color: red; }
+    100% { background-color: none; }
+}
+
+#tweet-list {
+	display:block;
+	width:90%;
+	height:600px;
+	overflow:auto;
+	margin-top:10px;
+}
+
+.tweet {
+	margin:20px 30px;
+	padding:10px 25px;
+	border:1px solid black;
+	border-radius: 20px;
+}
+
+a, a:visited {
+	color:blue;
+}
+
+.tweet-date {
+	margin-left:50px;
+}
+
+.tweet-text, .tweet-text a {
+	color: red;
+}
+
+.tweet-user {
+	margin-left:50px;
+}
+
+#tweet-list::-webkit-scrollbar-track {
+	/* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); */
+/* 	background-color: #326ca5; */
+	border-radius: 10px;
+}
+
+#tweet-list::-webkit-scrollbar {
+	width: 20px;
+/* 	background-color: #326ca5; */
+	border-radius: 10px;
+}
+
+#tweet-list::-webkit-scrollbar-thumb {
+ 	background-color: blue; 
+	border-radius: 10px;
+}
+
+.status-info {
+	font-weight:bold;
+	width:600px;
+	text-align:right;
+}
+
+.status-info span {
+	float:right;
+	font-weight:normal;
+	color:blue;
+	display:inline-block;
+	width:425px;
+	text-align:left;
+}
+
+</style>
+
+<script type="text/javascript">
+	function addTweet(tweet){
+		var screenName = tweet['user']['screen_name'];
+		var tmp = '<div class="tweet">';
+			tmp += '<div class="tweet-date">'+ tweet['created_at'] + '</div>';
+			tmp += '<div class="tweet-text"><a target="_blank" href="https://twitter.com/' + screenName + '/status/' + tweet['id_str'] + '">'+ tweet['text'] + '</a></div>';
+			tmp += '<div class="tweet-user"> by '+ tweet['user']['name'] + ' (<a href="https://twitter.com/'+ screenName +'" target="_blank">@'+ screenName + '</a>)</div>';
+			tmp += '</div>';
+		$('#tweet-list').prepend(tmp);
+	}
+</script>
+
+
+</head>
+<body>
+	<h1>Twitter Dump for: #election2016 OR #obama OR #hillary OR #clinton OR #trump</h1>
+	<div class="status-info">
+		Connection status:&nbsp;<span id="websocket-connection">Disconnected</span> 
+		<br /> 
+		Last Heartbeat:&nbsp;&nbsp;<span id="heartbeat">(none yet)</span>
+	</div>
+	<div id="tweet-list">
+	
+	</div>
+</body>
+
+<script type="text/javascript">
+	$(function() {
+		var ws = new WebSocket('ws://' + location.hostname + ':9000');
+		
+		ws.onopen = function(event){
+			$('#websocket-connection').text('Open');
+			console.log('OPEN   ' +JSON.stringify(event));
+		};
+		
+		ws.onclose = function(event){
+			var str = 'Closed (' + event.code + ') :: ';
+			switch (event.code){
+			case 1000:
+				str += 'Normal closure';
+				break;
+			case 1001:
+				str += 'Going away';
+				break;
+			case 1002:
+				str += 'Protocol error';
+				break;
+			case 1003:
+				str += 'Unsupported data';
+				break;
+			case 1005:
+				str += 'No status provided';
+				break;
+			case 1006:
+				str += 'Abnormal close';
+				break;
+			case 1007:
+				str += 'Inconsistent data';
+				break;
+			case 1008:
+				str += 'Data policy violation';
+				break;
+			case 1009:
+				str += 'Data frame too large';
+				break;
+			case 1010:
+				str += 'Server negotiation nonexistent';
+				break;
+			case 1011:
+				str += 'Server error';
+				break;
+			default:
+				str += 'Unknown code';
+				break;
+			}
+			$('#websocket-connection').text(str);
+		};
+		
+		ws.onmessage = function(event) {
+			switch (event.data) {
+			case 'connected':
+				$('#websocket-connection').text('Connected');
+				//console.log('Websocket connected...');
+				break;
+			case 'thb':
+				$('#websocket-connection').addClass('flash');
+				setTimeout(function(){
+					$('#websocket-connection').removeClass('flash');
+					}, 300);
+				$('#heartbeat').text((new Date()).toISOString());
+				//console.log('Twitter heartbeat...');
+				break;
+			case 'tc':
+				console.log('Twitter connection closed, server will retry connection in 5s...');
+				break;
+			case 'te':
+				console.log('Twitter connection error, server will retry connection in 5s...');
+				break;
+			default:
+				addTweet(JSON.parse(event.data));
+				console.log(JSON.parse(event.data));
+				break;
+			}
+		};
+	});
+</script>
+
+</html>

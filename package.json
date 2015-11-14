@@ -1,0 +1,22 @@
+{
+  "name": "bb-mh-node-twitter-dump",
+  "version": "1.0.0",
+  "description": "Use a hashtag to dump the twitter stream to the page",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/MaddHacker/node-twitter-dump.git"
+  },
+  "keywords": [
+    "twitter",
+    "node"
+  ],
+  "author": "MaddHacker <hacker@maddhacker.com>",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^0.8.0"
+  }
+}
