@@ -7,8 +7,8 @@
 /**
  * Global output manager
  */
-O = require('./server/out');
-var server = require('./server/server');
+O = require('./out');
+var server = require('./server');
 
 __IS_TRACE = false;
 __IS_DEBUG = false;
@@ -20,8 +20,8 @@ if (__IS_DEBUG || __IS_TRACE) {
 /*
  * SERVER INFORMATION
  */
-__serverPort = process.env.PORT || 8888;
-__websocketPort = 9000;
+__serverPort = 8888;
+__websocketPort = process.env.PORT || 9000;
 __webappRoot = 'webapp';
 
 /*

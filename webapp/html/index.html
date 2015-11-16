@@ -133,7 +133,8 @@ a, a:visited {
 
 <script type="text/javascript">
 	$(function() {
-		var ws = new WebSocket('ws://' + location.hostname + ':9000');
+// 		var ws = new WebSocket('ws://' + location.hostname + ':9000');
+		var ws = new WebSocket('wss://node-twitter-dump.cfapps.io:4443');
 		
 		ws.onopen = function(event){
 			$('#websocket-connection').text('Open');
