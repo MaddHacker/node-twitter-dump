@@ -1,27 +1,38 @@
 {
-  "name": "bb-mh-node-twitter-dump",
-  "version": "1.0.0",
+  "name": "node-twitter-dump",
+  "version": "1.1.0",
   "description": "Use a hashtag to dump the twitter stream to the page",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --coverage --colors",
     "start": "node index.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/MaddHacker/node-twitter-dump.git"
+    "url": "git://github.com/MaddHacker/node-twitter-dump.git"
   },
+ "bugs": {
+   "url": "https://github.com/MaddHacker/node-twitter-dump/issues",
+   "email": "hacker@maddhacker.com"
+ },
   "keywords": [
     "twitter",
-    "node"
+    "node",
+    "streaming data"
   ],
-  "author": "MaddHacker <hacker@maddhacker.com>",
-  "license": "MIT",
-  "dependencies": {
-    "ws": "^0.8.0"
-  },
+  "author": "MaddHacker <hacker@maddhacker.com> (https://www.maddhacker.com)",
+  "license": "Apache-2.0",
   "engines": {
-    "node": "0.12.7",
-    "npm": "2.7.4"
+    "node": ">=4.0.0",
+    "npm": ">=2.14.2"
+  },
+  "dependencies": {
+    "ws": "^5.2.0"
+  },
+  "devDependencies": {
+    "jest": "^22.4.4"
+  },
+  "jest": {
+    "verbose": true
   }
 }
